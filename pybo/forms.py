@@ -19,7 +19,7 @@ class QuestionForm(forms.ModelForm):
 class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answer
-        fields = ['conent']
+        fields = ['content']
         labels = {
             'content':'답변내용'
         }
