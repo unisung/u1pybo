@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -33,6 +34,7 @@ def detail(request, question_id):
     context = {'question':question}
     return render(request, 'pybo/question_detail.html', context)
 
+@login_required(login_url='common:login')
 def answer_create(request, question_id):
     """
     pybo 답변 등록
@@ -42,6 +44,7 @@ def answer_create(request, question_id):
         form = AnswerForm(request.POST)
         if form.is_valid():
             answer = form.save(commit=False)
+            answer.author = request.user #추가한 속성 author 적용
             answer.create_date = timezone.now()
             answer.question = question
             answer.save()
@@ -58,7 +61,7 @@ def answer_create(request, question_id):
     # # 등록 후 redirect로 상세페이지로 이동 localhost:8000/pybo/2/
     # return redirect('pybo:detail', question_id=question.id)
 
-
+@login_required(login_url='common:login')
 def question_create(request):
     """
     pybo 질문 등록
@@ -67,6 +70,7 @@ def question_create(request):
         form = QuestionForm(request.POST)
         if form.is_valid():
             question = form.save(commit=False)
+            question.author = request.user # 추가한 속성 author 적용
             question.create_date = timezone.now()
             question.save()
             return redirect('pybo:index')
