@@ -172,4 +172,14 @@ def comment_modify_question(request, comment_id):
 
 @login_required(login_url='common:login')
 def comment_delete_question(request, comment_id):
-    pass
+    """
+    pybo 질문 댓글 삭제
+    """
+    comment = get_object_or_404(Comment, pk=comment_id)
+    if request.user != comment.author:
+        messages.errors(request, '댓글삭제권한이 없습니다.')
+        return redirect('pybo:detail', question_id=comment.question_id)
+    else:
+        comment.delete()
+
+    return redirect('pybo:detail', question_id=comment.question_id)
