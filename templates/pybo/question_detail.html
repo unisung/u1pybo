@@ -16,7 +16,17 @@
       {% if request.user == question.author %} <!-- 작성자와 로그인 아이디가 같으면 수정 가능 -->
       <div class="my-3">
         <a href="{% url 'pybo:question_modify' question.id %}"
-             class="btn btn-sm btn-outline-secondary">수정</a>
+             class="btn btn-sm btn-outline-success">수정</a>
+        <a href="#"
+           data-uri="{% url 'pybo:question_delete' question.id %}"
+             class="delete btn btn-sm btn-outline-warning">삭제</a>
+      </div>
+      {% else %}
+      <div class="my-3">
+        <a href="#"
+             class="btn btn-sm btn-outline-secondary" disabled >수정</a>
+        <a href="#"
+             class="btn btn-sm btn-outline-secondary" disabled >삭제</a>
       </div>
       {% endif %}
     </div><!-- card-body -->
@@ -61,4 +71,13 @@
   <a href="/pybo/" class="btn btn-success">질문 목록</a>
 </form>
 </div><!-- container -->
+<script>
+  $(document).ready(function(){
+    $('.delete').on('click', function(){
+          if(confirm('정말로 삭제하시겠습니까?')){
+            location.href = $(this).data('uri');
+          }
+       });
+  });
+</script>
 {% endblock %}

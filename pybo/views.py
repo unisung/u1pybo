@@ -84,6 +84,7 @@ def question_create(request):
 
     return render(request, 'pybo/question_form.html', {'form':form})
 
+@login_required(login_url='common:login')
 def question_modify(request, question_id):
     """
     pybo 질문 수정
@@ -106,3 +107,15 @@ def question_modify(request, question_id):
     context = {'form':form}
     return render(request, 'pybo/question_form.html', context)
 
+
+@login_required(login_url='common:login')
+def question_delete(request, question_id):
+    """
+    pybo 질문 삭제
+    """
+    question = get_object_or_404(Question, pk=question_id)
+    if request.user != question.author:
+        messages.error(request, '삭제 권한이 없습니다.')
+        return redirect('pybo:detail', question_id=question.id)
+    question.delete() #삭제 처리
+    return redirect('pybo:index') # index페이지(question list)로 이동
