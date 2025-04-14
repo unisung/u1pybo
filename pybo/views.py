@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponse
@@ -32,6 +33,9 @@ def detail(request, question_id):
     # question = Question.objects.get(id=question_id)
     question = get_object_or_404(Question,pk=question_id)
     context = {'question':question}
+    print('question.author',question.author)
+    print('request.user', request.user)
+    print('question:', question)
     return render(request, 'pybo/question_detail.html', context)
 
 @login_required(login_url='common:login')
@@ -79,3 +83,26 @@ def question_create(request):
         form = QuestionForm()
 
     return render(request, 'pybo/question_form.html', {'form':form})
+
+def question_modify(request, question_id):
+    """
+    pybo 질문 수정
+    """
+    question = get_object_or_404(Question, pk=question_id)
+    if request.user != question.author:
+        messages.error(request, '수정권한이 없습니다.')
+        return redirect('pybo:detail', question_id = question.id)
+    if request.method == 'POST':
+        form = QuestionForm(request.POST, instance=question)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.author = request.user
+            question.modify_date = timezone.now() # 수정일시 지정
+            question.save()
+            return redirect('pybo:detail', question_id=question.id)
+    else:
+        form = QuestionForm(instance=question)
+
+    context = {'form':form}
+    return render('request', 'pybo/question_form.html', context)
+
