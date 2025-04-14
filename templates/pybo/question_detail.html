@@ -8,6 +8,12 @@
           {{question.content}}
       </div><!-- card-text -->
       <div class="d-flex justify-content-end">
+        {% if question.modify_date %}
+        <div class="badge badge-light p-2 text-left  mx-3 ">
+          <div class="mb-2">수정 일시</div>
+          <div>{{ question.modify_date }}</div>
+        </div>
+        {% endif %}
         <div class="badge badge-light p-2 text-left">
           <div class="mb-2">{{ question.author.username }}</div>
           <div>{{question.create_date}}</div>
@@ -80,4 +86,7 @@
        });
   });
 </script>
+
+
+
 {% endblock %}
