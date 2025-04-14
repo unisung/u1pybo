@@ -15,8 +15,8 @@ urlpatterns = [
     path('question/delete/<int:question_id>/',views.question_delete,name="question_delete"),
     path('comment/create/question/<int:question_id>/', views.comment_create_question,
                 name='comment_create_question'),
-    path('comment/modify/question/<int:question_id>/', views.comment_modify_question,
+    path('comment/modify/question/<int:comment_id>/', views.comment_modify_question,
                 name='comment_modify_question'),
-    path('comment/delete/question/<int:question_id>/', views.comment_delete_question,
+    path('comment/delete/question/<int:comment_id>/', views.comment_delete_question,
                 name='comment_delete_question'),
 ]
