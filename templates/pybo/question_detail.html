@@ -8,8 +8,9 @@
           {{question.content}}
       </div><!-- card-text -->
       <div class="d-flex justify-content-end">
-        <div class="badge badge-light p-2">
-          {{question.create_date}}
+        <div class="badge badge-light p-2 text-left">
+          <div class="mb-2">{{ question.author.username }}</div>
+          <div>{{question.create_date}}</div>
         </div><!-- badge -->
       </div><!-- d-flex -->
     </div><!-- card-body -->
@@ -23,21 +24,14 @@
         {{ answer.content }}
     </div><!-- card-text -->
     <div class="d-flex justify-content-end">
-      <div class="badge badge-light p-2 text-left">
-        <div class="mb-2">{{ question.author.username}} | {{ request_id}}</div>
-        <div>{{ answer.create_date}} |  {{ question.author.user_id}}</div>
+      <div class="badge badge-light p-2">
+        {{ answer.create_date}}
       </div><!-- badge -->
     </div><!-- d-flex -->
-    | {{ question.author.username }}
-    {% if request.user  == question.author %}<!-- 로그인한 사용자와 작성자가 동일하면 -->
-    <div class="my-3">
-      <a href="{% url 'pybo:question_modify' question.id %}"
-               class="btn btn-sm btn-outline-secondary">수정</a>
-    </div>
-    {% endif %}
   </div><!-- card-body -->
 </div><!-- card -->
 {% endfor %}
+
 <form action="{% url 'pybo:answer_create' question.id %}" method="post" class="my-3">
   {% csrf_token%}
   <!-- 오류 메세지 start -->
