@@ -2,10 +2,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.utils import timezone
 
-from pybo.forms import QuestionForm, AnswerForm
+from pybo.forms import QuestionForm, AnswerForm, CommentForm
 from pybo.models import Question
 
 # Create your views here.
@@ -119,3 +119,35 @@ def question_delete(request, question_id):
         return redirect('pybo:detail', question_id=question.id)
     question.delete() #삭제 처리
     return redirect('pybo:index') # index페이지(question list)로 이동
+
+
+@login_required(login_url='common:login')
+def comment_create_question(request, question_id):
+    """
+    pybo 질문댓글 등록
+    """
+    question = get_object_or_404(Question, pk=question_id)
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.create_date = timezone.now()
+            comment.question = question
+            comment.save() # db저장
+            # return redirect('{}#comment_{}'.format(resolve_url('pybo:detail', question_id=comment.question.id),comment.id))
+            return redirect('pybo:detail', question_id=question.id)
+    else:
+        form = CommentForm()
+
+    context = {'form':form}
+    return render(request, 'pybo/comment_form.html', context)
+
+
+@login_required(login_url='common:login')
+def comment_modify_question(request, comment_id):
+    pass
+
+@login_required(login_url='common:login')
+def comment_delete_question(request, comment_id):
+    pass
