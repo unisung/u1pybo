@@ -183,3 +183,18 @@ def comment_delete_question(request, comment_id):
         comment.delete()
 
     return redirect('pybo:detail', question_id=comment.question_id)
+
+# 답변 질문 등록
+@login_required(login_url='common:login')
+def comment_create_answer(request, answer_id):
+    pass
+
+# 답변 질문 등록
+@login_required(login_url='common:login')
+def comment_modify_answer(request, comment_id):
+    pass
+
+# 답변 질문 등록
+@login_required(login_url='common:login')
+def comment_delete_answer(request, comment_id):
+    pass
