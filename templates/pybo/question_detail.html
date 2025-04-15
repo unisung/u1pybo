@@ -23,9 +23,18 @@
       <div class="my-3">
         <a href="{% url 'pybo:question_modify' question.id %}"
              class="btn btn-sm btn-outline-success">수정</a>
-        <a href="#"
-           data-uri="{% url 'pybo:question_delete' question.id %}"
-             class="delete btn btn-sm btn-outline-warning">삭제</a>
+<!--        <a href="#"-->
+<!--           data-uri="{% url 'pybo:question_delete' question.id %}"-->
+<!--             class="delete btn btn-sm btn-outline-warning">삭제</a>-->
+        <!-- Button trigger modal -->
+        <button type="button" class="delete btn btn-sm btn-outline-warning"
+                data-toggle="modal" data-target="#deleteModel"
+        data-uri="{% url 'pybo:question_delete' question.id %}"
+        >
+          삭제
+        </button>
+
+
       </div>
       {% else %}
       <div class="my-3">
@@ -49,9 +58,17 @@
                 {% endif %}
             </span>
             {% if request.user == comment.author %}
-            <a href="{% url 'pybo:comment_modify_question' comment.id %}" class="small">수정</a>
-            <a href="#" class="small delete"
-                   data-uri="{% url 'pybo:comment_delete_question' comment.id%}">삭제</a>
+            <a href="{% url 'pybo:comment_modify_question' comment.id %}"
+               class="btn btn-sm btn-outline-success  small">수정</a>
+<!--            <a href="#" class="small delete"-->
+<!--                data-uri="{% url 'pybo:comment_delete_question' comment.id%}">삭제</a>-->
+            <!-- Button trigger modal -->
+                <button type="button" class="delete btn btn-sm btn-outline-warning"
+                        data-toggle="modal" data-target="#deleteModel"
+                data-uri="{% url 'pybo:comment_delete_question' comment.id%}"
+                >
+                  삭제
+                </button>
             {% endif %}
           </div>
         {% endfor %}
@@ -105,15 +122,41 @@
 </form>
 </div><!-- container -->
 <script>
-  $(document).ready(function(){
-    $('.delete').on('click', function(){
-          if(confirm('정말로 삭제하시겠습니까?')){
-            location.href = $(this).data('uri');
-          }
-       });
-  });
-</script>
+ $(document).ready(function(){
+  let deleteUri = "";
 
+  $('#deleteModel').on('show.bs.modal', function(event){
+    const button = $(event.relatedTarget);
+    deleteUri = button.data('uri');
+  });
+
+  $('.delBtn').on('click', function(){
+    if(deleteUri){
+      location.href = deleteUri;
+      }
+   });
+ });
+</script>
+<!-- Modal -->
+<div class="modal fade" id="deleteModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">삭제하기</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        정말 삭제하시겠습니까?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+        <button type="button"  class="delBtn btn btn-primary">삭제</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 {% endblock %}
