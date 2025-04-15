@@ -25,7 +25,7 @@ urlpatterns = [
                 name='comment_create_answer'),
     path('comment/modify/answer/<int:comment_id>/', views.comment_modify_answer,
                 name='comment_modify_answer'),
-    path('comment/delete/asnwer/<int:comment_id>/', views.comment_delete_answer,
+    path('comment/delete/answer/<int:comment_id>/', views.comment_delete_answer,
                 name='comment_delete_answer'),
 
 ]

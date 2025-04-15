@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect, resolve_url
 from django.utils import timezone
 
 from pybo.forms import QuestionForm, AnswerForm, CommentForm
-from pybo.models import Question, Comment
+from pybo.models import Question, Comment, Answer
 
 
 # Create your views here.
@@ -184,17 +184,42 @@ def comment_delete_question(request, comment_id):
 
     return redirect('pybo:detail', question_id=comment.question_id)
 
-# 답변 질문 등록
+# 답변 댓글 등록
 @login_required(login_url='common:login')
 def comment_create_answer(request, answer_id):
-    pass
+    """
+    pybo 답변 댓글 등록
+    """
+    answer = get_object_or_404(Answer, pk=answer_id)
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False) # 메모리 임시저장-db에 미반영
+            comment.author = request.user
+            comment.create_date = timezone.now()
+            comment.answer = answer
+            comment.save() # db에 반영처리
+            return redirect('pybo:detail', question_id=comment.answer.question.id)
 
-# 답변 질문 등록
+    else:
+        form = CommentForm()
+
+        context = {'form':form}
+    return render(request, 'pybo/comment_form.html', context)
+
+# 답변 댓글 등록
 @login_required(login_url='common:login')
 def comment_modify_answer(request, comment_id):
+    """
+    pybo 답변 댓글 수정
+    """
     pass
 
-# 답변 질문 등록
+
+# 답변 댓글 등록
 @login_required(login_url='common:login')
 def comment_delete_answer(request, comment_id):
+    """
+    pybo 댓글 삭제
+    """
     pass
